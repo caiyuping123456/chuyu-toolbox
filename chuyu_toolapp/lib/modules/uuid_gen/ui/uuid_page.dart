@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/export_service.dart';
 import '../../../core/theme.dart';
 import '../uuid_service.dart';
 
@@ -103,10 +104,29 @@ class _UuidPageState extends State<UuidPage> {
           child: const Text('生成')),
       ),
       const SizedBox(width: 6),
+
       SizedBox(
         width: 84, height: 32,
         child: OutlinedButton(
-          key: const ValueKey('uuid_copy_all'),
+          key: const ValueKey('uuid_export'),
+          onPressed: _ids.isEmpty ? null : () async {
+            final r = await ExportService.exportText(
+                _ids.join('\n'), 'uuid-list', 'txt');
+            if (!mounted) return;
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(r.ok ? '已导出到 ${r.path}' : r.error!),
+                duration: const Duration(seconds: 3)));
+          },
+          style: OutlinedButton.styleFrom(
+            foregroundColor: AppColors.text2, side: const BorderSide(color: AppColors.border), padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.control)),
+            textStyle: const TextStyle(fontSize: 11.5), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
+          child: const Text('导出')),
+      ),
+      const SizedBox(width: 6),
+      SizedBox(
+        width: 84, height: 32,
+        child: OutlinedButton(
           onPressed: _ids.isEmpty ? null : () async {
             await Clipboard.setData(ClipboardData(text: _ids.join('\n')));
             if (!mounted) return;
@@ -204,5 +224,6 @@ class _Pill extends StatelessWidget {
         fontWeight: color == null ? FontWeight.w400 : FontWeight.w600)),
   );
 }
+
 
 

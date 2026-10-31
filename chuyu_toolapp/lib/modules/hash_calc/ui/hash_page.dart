@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/export_service.dart';
 import '../../../core/theme.dart';
 import '../hash_service.dart';
 
@@ -117,6 +118,20 @@ class _HashPageState extends State<HashPage> {
               const Spacer(),
               if (items.isNotEmpty)
                 IconButton(
+                  key: const ValueKey('hash_export'),
+                  tooltip: '导出摘要',
+                  icon: const Icon(Icons.file_download_outlined, size: 16),
+                  color: AppColors.text3,
+                  onPressed: items.isEmpty ? null : () async {
+                    final text = items.map((e) => ': ').join('\n');
+                    final r = await ExportService.exportText(text, 'hashes', 'txt');
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(r.ok ? '已导出到 ' : r.error!),
+                        duration: const Duration(seconds: 3)));
+                  },
+                ),
+                IconButton(
                   key: const ValueKey('hash_copy_all'),
                   tooltip: '复制全部',
                   icon: const Icon(Icons.copy_all_outlined, size: 16),
@@ -190,5 +205,6 @@ class _Pill extends StatelessWidget {
         fontWeight: color == null ? FontWeight.w400 : FontWeight.w600)),
   );
 }
+
 
 

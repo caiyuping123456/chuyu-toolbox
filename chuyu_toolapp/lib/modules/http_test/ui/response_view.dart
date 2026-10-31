@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/export_service.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/theme.dart';
@@ -97,7 +99,8 @@ class _ResponseViewState extends State<ResponseView> {
               const SizedBox(width: 8),
               Text(fmtSize(r.sizeBytes), style: AppTypography.aux),
               const Spacer(),
-              _CopyButton(text: r.body),
+              _ExportButton(text: r.body),
+        _CopyButton(text: r.body),
               const SizedBox(width: 10),
               _TabButton('Body', _tab == 0, () => setState(() => _tab = 0)),
               const SizedBox(width: 8),
@@ -255,6 +258,50 @@ class _TabButton extends StatelessWidget {
   }
 }
 
+class _ExportButton extends StatelessWidget {
+  const _ExportButton({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 4),
+      child: InkWell(
+        key: const ValueKey('resp_export'),
+        onTap: text.isEmpty
+            ? null
+            : () async {
+                final r = await ExportService.exportText(
+                    text, 'http-response', 'txt');
+                if (!context.mounted) return;
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(SnackBar(
+                    content: Text(r.ok
+                        ? '已导出到 ${r.path}'
+                        : r.error!),
+                    duration: const Duration(seconds: 3),
+                  ));
+              },
+        borderRadius: BorderRadius.circular(4),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          child: Row(mainAxisSize: MainAxisSize.min, children: [
+            Icon(Icons.file_download_outlined,
+                size: 12,
+                color: text.isEmpty ? AppColors.text4 : AppColors.text3),
+            const SizedBox(width: 3),
+            Text('导出',
+                style: TextStyle(
+                    fontSize: 11,
+                    color: text.isEmpty ? AppColors.text4 : AppColors.text3)),
+          ]),
+        ),
+      ),
+    );
+  }
+}
 class _CopyButton extends StatelessWidget {
   const _CopyButton({required this.text});
 
@@ -293,3 +340,4 @@ String fmtSize(int bytes) {
   if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
   return '${(bytes / 1024 / 1024).toStringAsFixed(2)} MB';
 }
+

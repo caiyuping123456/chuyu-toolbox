@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../core/export_service.dart';
 import '../../../core/theme.dart';
 import '../json_formatter.dart';
 
@@ -51,6 +52,18 @@ class _JsonFormatPageState extends State<JsonFormatPage> {
       _result = r;
       _notice = r.ok ? 'JSON 合法' : null;
     });
+  }
+
+  Future<void> _export() async {
+    final text = _result?.output;
+    if (text == null) return;
+    final r = await ExportService.exportText(text, 'json-formatted', 'json');
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+          content: Text(r.ok ? '已导出到 ' : r.error!),
+          duration: const Duration(seconds: 3)));
   }
 
   Future<void> _copy() async {
@@ -224,6 +237,13 @@ class _JsonFormatPageState extends State<JsonFormatPage> {
             }),
           ),
           const SizedBox(width: 6),
+          _ActionButton(
+            key: const ValueKey('json_export'),
+            icon: Icons.file_download_outlined,
+            label: '导出',
+            enabled: canOut,
+            onTap: _export,
+          ),
           _ActionButton(
             key: const ValueKey('json_copy'),
             icon: Icons.copy_all_outlined,
@@ -613,3 +633,4 @@ class _Pill extends StatelessWidget {
     );
   }
 }
+
