@@ -32,8 +32,13 @@ flutter test             # 54 项测试
 - **持久化**：HTTP 集合/历史落盘 `%APPDATA%\chuyu-toolbox\`
 - **窄窗口**：侧栏自动收成图标列
 
+## 打包（M4）
+
+见 `installer/BUILD.md`（需 VS Build Tools + Inno Setup，脚本已就绪）。
+
 ## 文档
 
 - `SPEC/SPEC.md` — 规格说明书（最新版）
 - `plans/` — 里程碑计划与路线图
 - `ChuYu万能工具箱-界面原型.html` — 可交互视觉基准
+
