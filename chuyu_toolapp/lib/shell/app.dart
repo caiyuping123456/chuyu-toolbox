@@ -10,6 +10,7 @@ import 'module_manager_page.dart';
 import 'nav_sidebar.dart';
 import 'search_palette.dart';
 import 'settings_page.dart';
+import 'settings_store.dart';
 
 /// 应用壳：标题栏 38 + （侧栏 216 | 内容）+ 状态栏 24（SPEC §4.1 / §7.1）。
 class ToolboxApp extends StatelessWidget {
@@ -19,15 +20,19 @@ class ToolboxApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings = context.watch<SettingsStore>();
     return MultiProvider(
       providers: [
         Provider<ModuleRegistry>.value(value: registry),
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+        ChangeNotifierProvider<SettingsStore>(create: (_) => SettingsStore()..load()),
       ],
       child: MaterialApp(
         title: 'ChuYu 万能工具箱',
         debugShowCheckedModeBanner: false,
         theme: buildAppTheme(),
+        darkTheme: buildAppTheme(dark: true),
+        themeMode: settings.dark ? ThemeMode.dark : ThemeMode.light,
         home: const _Shell(),
       ),
     );
@@ -207,3 +212,4 @@ class _StatusBar extends StatelessWidget {
     );
   }
 }
+

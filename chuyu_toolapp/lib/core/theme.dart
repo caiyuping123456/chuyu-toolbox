@@ -81,7 +81,21 @@ Color methodColor(String method) => switch (method.toUpperCase()) {
       _ => AppColors.err,
     };
 
-ThemeData buildAppTheme() {
+/// 深色 token（M5 增强：设置页可切换）。
+abstract final class AppDarkColors {
+  static const Color bg = Color(0xFF16181D);
+  static const Color panel = Color(0xFF1E2126);
+  static const Color side = Color(0xFF191C21);
+  static const Color fill = Color(0xFF26292F);
+  static const Color border = Color(0xFF2E323A);
+  static const Color borderSoft = Color(0xFF343943);
+  static const Color text = Color(0xFFE8EAF0);
+  static const Color text2 = Color(0xFFB4BAC5);
+  static const Color text3 = Color(0xFF8A92A1);
+  static const Color text4 = Color(0xFF6B7280);
+}
+
+ThemeData buildAppTheme({bool dark = false}) {
   return ThemeData(
     useMaterial3: true,
     fontFamily: 'Segoe UI',
@@ -90,17 +104,17 @@ ThemeData buildAppTheme() {
       'Microsoft YaHei UI',
       'PingFang SC',
     ],
-    scaffoldBackgroundColor: AppColors.bg,
+    scaffoldBackgroundColor: dark ? AppDarkColors.bg : AppColors.bg,
     colorScheme: ColorScheme.fromSeed(
       seedColor: AppColors.accent,
       primary: AppColors.accent,
-      surface: AppColors.panel,
+      surface: dark ? AppDarkColors.panel : AppColors.panel,
       error: AppColors.err,
     ),
-    dividerTheme: const DividerThemeData(color: AppColors.border, thickness: 1, space: 1),
+    dividerTheme: DividerThemeData(color: dark ? AppDarkColors.border : AppColors.border, thickness: 1, space: 1),
     snackBarTheme: SnackBarThemeData(
       behavior: SnackBarBehavior.floating,
-      backgroundColor: AppColors.panel,
+      backgroundColor: dark ? AppDarkColors.panel : AppColors.panel,
       contentTextStyle: const TextStyle(fontSize: 12, color: AppColors.text),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.control),
@@ -116,3 +130,4 @@ ThemeData buildAppTheme() {
     ),
   );
 }
+

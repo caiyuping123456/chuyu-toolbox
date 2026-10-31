@@ -5,14 +5,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:chuyu_toolapp/main.dart';
+import 'package:provider/provider.dart';
 import 'package:chuyu_toolapp/modules/http_test/store.dart';
+import 'package:chuyu_toolapp/shell/settings_store.dart';
 import 'package:chuyu_toolapp/shell/app.dart';
 
 void main() {
   late Directory storeDir;
+  late Directory settingsDir;
   setUp(() {
     storeDir = Directory.systemTemp.createTempSync('chuyu_shell_store');
     HttpStore.debugBaseDir = storeDir;
+    settingsDir = Directory.systemTemp.createTempSync('chuyu_shell_settings');
   });
   tearDown(() {
     HttpStore.debugBaseDir = null;
@@ -27,7 +31,13 @@ void main() {
     tester.view.physicalSize = const Size(960, 640);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(ToolboxApp(registry: ToolboxAppBootstrap.registry));
+    await tester.pumpWidget(MultiProvider(
+      providers: [
+        ChangeNotifierProvider<SettingsStore>(
+            create: (_) => SettingsStore(baseDir: settingsDir)..load()),
+      ],
+      child: ToolboxApp(registry: ToolboxAppBootstrap.registry),
+    ));
     await tester.pumpAndSettle();
   }
 
@@ -121,6 +131,7 @@ void main() {
     expect(find.text('快捷入口'), findsNothing);
   });
 }
+
 
 
 
