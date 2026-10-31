@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChuYu 万能工具箱 · 界面原型（屏幕① 首页 / 屏幕② HTTP 测试）</title>
+<style>
+  body{margin:0;padding:24px 28px 40px;background:#eceef1;font-family:"Segoe UI",system-ui,"Microsoft YaHei",sans-serif}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+<div id="chuyu-proto">
+<style>
+  #chuyu-proto *{box-sizing:border-box;margin:0;padding:0}
+  #chuyu-proto [hidden]{display:none!important}
+  #chuyu-proto .cy-cap{margin:0 2px 8px;font-size:13px;font-weight:600}
+  #chuyu-proto .cy-cap.gap{margin-top:20px}
+  #chuyu-proto .cy-cap small{font-weight:400;opacity:.75}
+  #chuyu-proto .cy-stage{container-type:inline-size}
+  #chuyu-proto .cy-app{
+    --bg:#f6f7f9; --panel:#ffffff; --panel2:#f2f4f7; --border:#e7e9ee;
+    --text:#21242b; --muted:#838b98; --accent:#2f6bff; --accent-fg:#ffffff;
+    --soft:color-mix(in srgb,#2f6bff 9%,transparent);
+    --ok:#15803d; --ok-bg:#e7f6ec; --get:#157347; --post:#b06f08; --put:#2563eb;
+    display:flex;flex-direction:column;height:620px;min-width:0;overflow:hidden;
+    border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);
+    font:13px/1.5 "Segoe UI",system-ui,"Microsoft YaHei",sans-serif;
+    box-shadow:0 10px 28px rgba(24,30,45,.10);
+  }
+  #chuyu-proto .cy-app svg{width:14px;height:14px;flex:none}
+  #chuyu-proto button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  #chuyu-proto input,select{font:inherit;color:var(--text)}
+  /* 标题栏 */
+  #chuyu-proto .cy-titlebar{display:flex;align-items:center;height:36px;padding:0 12px;background:var(--panel);border-bottom:1px solid var(--border);font-size:12px;color:var(--muted)}
+  #chuyu-proto .cy-titlebar b{color:var(--text);font-weight:600}
+  #chuyu-proto .cy-winbtns{margin-left:auto;display:flex;gap:14px;font-size:11px}
+  /* 左侧导航 */
+  #chuyu-proto .cy-nav{width:216px;flex:none;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;min-height:0}
+  #chuyu-proto .cy-brand{display:flex;align-items:center;gap:10px;padding:14px 14px 12px;border-bottom:1px solid var(--border)}
+  #chuyu-proto .cy-logo{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--accent);color:#fff;font-weight:700;font-size:12px;letter-spacing:.02em}
+  #chuyu-proto .cy-brand b{font-size:13px}
+  #chuyu-proto .cy-brand span{display:block;font-size:10.5px;color:var(--muted)}
+  #chuyu-proto .cy-navlist{flex:1;min-height:0;overflow:auto;padding:8px}
+  #chuyu-proto .cy-sec{padding:10px 8px 4px;font-size:10.5px;font-weight:600;letter-spacing:.07em;color:var(--muted)}
+  #chuyu-proto .nv{display:flex;align-items:center;gap:9px;width:100%;padding:7px 9px;border-radius:7px;text-align:left;color:var(--text)}
+  #chuyu-proto .nv:hover{background:var(--panel2)}
+  #chuyu-proto .nv svg{width:15px;height:15px;color:var(--muted)}
+  #chuyu-proto .nv.on{background:var(--soft);color:var(--accent);font-weight:600;box-shadow:inset 2px 0 0 var(--accent)}
+  #chuyu-proto .nv.on svg{color:var(--accent)}
+  #chuyu-proto .nv.off{color:var(--muted);cursor:default}
+  #chuyu-proto .nv.off:hover{background:none}
+  #chuyu-proto .nv em{margin-left:auto;font-style:normal;font-size:9.5px;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:1px 4px}
+  #chuyu-proto .cy-navfoot{border-top:1px solid var(--border);padding:8px}
+  /* 主体 */
+  #chuyu-proto .cy-shell{display:flex;flex:1;min-height:0}
+  #chuyu-proto .cy-content{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg)}
+  /* 状态栏 */
+  #chuyu-proto .cy-statusbar{flex:none;display:flex;align-items:center;gap:8px;height:26px;padding:0 12px;border-top:1px solid var(--border);background:var(--panel);font-size:11px;color:var(--muted)}
+  #chuyu-proto .cy-dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  #chuyu-proto .cy-statusbar .right{margin-left:auto;font-variant-numeric:tabular-nums}
+  /* ── 首页 ── */
+  #chuyu-proto .home{flex:1;min-height:0;overflow:auto;padding:26px 34px 20px;display:flex;flex-direction:column;gap:20px}
+  #chuyu-proto .hero h1{font-size:20px;font-weight:650;letter-spacing:.01em}
+  #chuyu-proto .hero p{margin-top:6px;max-width:660px;font-size:13px;color:var(--muted)}
+  #chuyu-proto .hero-pills{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  #chuyu-proto .hero-pills span{font-size:11.5px;color:var(--muted);border:1px solid var(--border);border-radius:14px;padding:3px 11px;background:var(--panel)}
+  #chuyu-proto .steps{display:flex;gap:10px;flex-wrap:wrap}
+  #chuyu-proto .steps>div{flex:1;min-width:220px;display:flex;gap:10px;align-items:flex-start;border:1px solid var(--border);border-radius:10px;background:var(--panel);padding:12px 14px}
+  #chuyu-proto .steps b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--soft);color:var(--accent);font-size:12px;flex:none}
+  #chuyu-proto .steps strong{font-size:12.5px;display:block}
+  #chuyu-proto .steps span{font-size:11.5px;color:var(--muted)}
+  #chuyu-proto .feat{display:flex;align-items:center;gap:16px;padding:18px;border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));border-radius:12px;background:var(--panel)}
+  #chuyu-proto .feat-ico{display:grid;place-items:center;width:46px;height:46px;border-radius:11px;background:var(--soft);color:var(--accent);flex:none}
+  #chuyu-proto .feat-ico svg{width:22px;height:22px}
+  #chuyu-proto .feat-main{min-width:0;flex:1}
+  #chuyu-proto .feat-main b{font-size:15px;display:flex;align-items:center;gap:8px}
+  #chuyu-proto .feat-chip{font-size:10px;font-weight:500;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--border));border-radius:4px;padding:1px 6px}
+  #chuyu-proto .feat-main>span{display:block;margin-top:4px;font-size:12.5px;color:var(--muted)}
+  #chuyu-proto .feat-stats{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+  #chuyu-proto .feat-stats i{font-style:normal;font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:5px;padding:2px 8px;background:var(--bg)}
+  #chuyu-proto .feat-go{display:flex;align-items:center;gap:7px;height:34px;padding:0 16px;border-radius:8px;background:var(--accent);color:var(--accent-fg);font-weight:600;flex:none}
+  #chuyu-proto .cat{display:flex;flex-direction:column;gap:10px}
+  #chuyu-proto .cat-h{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--muted)}
+  #chuyu-proto .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:10px}
+  #chuyu-proto .card{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:14px;border:1px solid var(--border);border-radius:10px;background:var(--panel);text-align:left}
+  #chuyu-proto .card b{font-size:13px}
+  #chuyu-proto .card span{font-size:11.5px;color:var(--muted)}
+  #chuyu-proto .cico{display:grid;place-items:center;width:34px;height:34px;border-radius:8px;color:var(--accent);background:var(--soft)}
+  #chuyu-proto .cico svg{width:16px;height:16px}
+  #chuyu-proto .card.off{opacity:.55;cursor:default}
+  #chuyu-proto .card.off .cico{color:var(--muted);background:var(--panel2)}
+  #chuyu-proto .eta{margin-left:auto;font-size:10px;font-style:normal;color:var(--muted);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-weight:400}
+  /* ── 模块页 ── */
+  #chuyu-proto .modhead{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--border);background:var(--panel)}
+  #chuyu-proto .modhead .name{display:flex;align-items:center;gap:8px;font-weight:600}
+  #chuyu-proto .chip{font-size:10px;font-weight:400;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 40%,var(--border));border-radius:4px;padding:1px 6px}
+  #chuyu-proto .modhead .desc{font-size:11.5px;color:var(--muted)}
+  #chuyu-proto .modhead .acts{margin-left:auto;display:flex;gap:4px}
+  #chuyu-proto .iconbtn{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;color:var(--muted)}
+  #chuyu-proto .iconbtn:hover{background:var(--panel2);color:var(--text)}
+  #chuyu-proto .modwork{display:flex;flex:1;min-height:0}
+  #chuyu-proto .mside{width:196px;flex:none;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:auto;padding:0 6px 8px}
+  #chuyu-proto .mside-tabs{padding:8px 8px 0}
+  #chuyu-proto .sec-h{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 4px;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--muted)}
+  #chuyu-proto .sec-h svg{width:12px;height:12px}
+  #chuyu-proto .sec.grow{flex:1;min-height:70px}
+  #chuyu-proto .coll-row{display:flex;align-items:center;gap:6px;padding:5px 8px;font-weight:600}
+  #chuyu-proto .coll-row svg{width:13px;height:13px;color:var(--muted)}
+  #chuyu-proto .count{margin-left:auto;font-size:10px;color:var(--muted);font-weight:400}
+  #chuyu-proto .req-row,.his{display:flex;align-items:center;gap:7px;width:calc(100% - 12px);margin-left:12px;padding:5px 8px;border-radius:6px;text-align:left}
+  #chuyu-proto .req-row:hover,.his:hover{background:var(--panel2)}
+  #chuyu-proto .req-row.on{background:var(--soft);font-weight:600}
+  #chuyu-proto .req-row>span,.his>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #chuyu-proto .his{color:var(--muted)}
+  #chuyu-proto .his time{margin-left:auto;font-size:10px;font-variant-numeric:tabular-nums;flex:none}
+  #chuyu-proto .m{flex:none;font-size:9px;font-weight:700;padding:2px 4px;border-radius:4px}
+  #chuyu-proto .m.get{color:var(--get);background:color-mix(in srgb,var(--get) 13%,transparent)}
+  #chuyu-proto .m.post{color:var(--post);background:color-mix(in srgb,var(--post) 15%,transparent)}
+  #chuyu-proto .m.put{color:var(--put);background:color-mix(in srgb,var(--put) 13%,transparent)}
+  #chuyu-proto .mmain{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--panel)}
+  #chuyu-proto .reqbar{display:flex;align-items:center;gap:8px;padding:10px 14px 8px}
+  #chuyu-proto .method{border:1px solid var(--border);border-radius:7px;background:var(--panel);overflow:hidden}
+  #chuyu-proto .method select{appearance:none;border:0;background:transparent;font-weight:700;font-size:12px;padding:7px 24px 7px 10px;outline:none;cursor:pointer;color:var(--get);
+    background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);
+    background-position:calc(100% - 12px) 55%,calc(100% - 8px) 55%;background-size:4px 4px;background-repeat:no-repeat}
+  #chuyu-proto .url{flex:1;min-width:0;height:32px;padding:0 10px;border:1px solid var(--border);border-radius:7px;background:var(--panel);font:12px/1 ui-monospace,Consolas,monospace}
+  #chuyu-proto .url:focus{outline:2px solid color-mix(in srgb,var(--accent) 40%,transparent);outline-offset:-1px}
+  #chuyu-proto .send{display:flex;align-items:center;gap:6px;height:32px;padding:0 18px;border-radius:7px;background:var(--accent);color:var(--accent-fg);font-weight:600}
+  #chuyu-proto .save{display:flex;align-items:center;gap:5px;height:32px;padding:0 12px;border:1px solid var(--border);border-radius:7px;color:var(--muted)}
+  #chuyu-proto .save:hover{color:var(--text);background:var(--panel2)}
+  #chuyu-proto .save svg{width:12px;height:12px}
+  #chuyu-proto .tabwrap{display:flex;flex-direction:column;min-height:0;flex:0 1 auto}
+  #chuyu-proto .tabbar{display:flex;align-items:stretch;gap:2px;padding:0 10px;border-bottom:1px solid var(--border)}
+  #chuyu-proto .tab{display:flex;align-items:center;gap:5px;height:34px;padding:0 12px;font-size:12.5px;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+  #chuyu-proto .tab:hover{color:var(--text)}
+  #chuyu-proto .tab.on{color:var(--text);font-weight:600;border-color:var(--accent)}
+  #chuyu-proto .tab em{font-size:10px;font-style:normal;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:0 5px}
+  #chuyu-proto .tab.dis{opacity:.55;cursor:default}
+  #chuyu-proto .tabbar.mini .tab{height:26px;padding:0 8px;font-size:11.5px}
+  #chuyu-proto .pane{padding:10px 16px}
+  #chuyu-proto .kv{display:grid;grid-template-columns:22px minmax(0,1fr) minmax(0,1.25fr) minmax(0,.9fr) 24px;gap:6px;align-items:center}
+  #chuyu-proto .kv-h{font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--muted)}
+  #chuyu-proto .kv input[type=text]{width:100%;height:28px;padding:0 8px;border:1px solid transparent;border-radius:6px;background:var(--panel2);font-size:12px}
+  #chuyu-proto .kv input[type=text]:focus{outline:none;border-color:var(--accent);background:var(--panel)}
+  #chuyu-proto .kv input[type=checkbox]{width:14px;height:14px;accent-color:var(--accent)}
+  #chuyu-proto .kv .note{color:var(--muted)}
+  #chuyu-proto .hint{padding:6px 0 0;font-size:11.5px;color:var(--muted)}
+  #chuyu-proto .radios{display:flex;gap:6px;flex-wrap:wrap}
+  #chuyu-proto .rd{position:relative}
+  #chuyu-proto .rd input{position:absolute;opacity:0}
+  #chuyu-proto .rd span{display:inline-block;padding:4px 10px;border:1px solid var(--border);border-radius:14px;font-size:11.5px;color:var(--muted);cursor:pointer}
+  #chuyu-proto .rd input:checked+span{border-color:var(--accent);color:var(--text);font-weight:600;background:var(--soft)}
+  #chuyu-proto .split{flex:none;height:7px;background:var(--panel2);border-block:1px solid var(--border);display:grid;place-items:center;cursor:row-resize}
+  #chuyu-proto .split span{width:34px;height:3px;border-radius:2px;background:var(--border)}
+  #chuyu-proto .res{flex:1;min-height:0;display:flex;flex-direction:column}
+  #chuyu-proto .resbar{display:flex;align-items:center;gap:10px;padding:8px 16px}
+  #chuyu-proto .status{font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:var(--ok-bg);color:var(--ok)}
+  #chuyu-proto .meta-i{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+  #chuyu-proto .resbar .tabbar{margin-left:auto;border-bottom:0;padding:0}
+  #chuyu-proto .viewbar{display:flex;align-items:center;gap:2px;padding:0 16px 6px;border-bottom:1px solid var(--border)}
+  #chuyu-proto .viewbar .tab{height:24px;font-size:11.5px;padding:0 8px}
+  #chuyu-proto .scoll{flex:1;min-height:0;overflow:auto;padding:10px 16px}
+  #chuyu-proto .json{font:12px/1.65 ui-monospace,Consolas,"Cascadia Mono",monospace;white-space:pre;color:var(--text)}
+  #chuyu-proto .json .k{color:#7c3aed}
+  #chuyu-proto .json .s{color:#0a7d44}
+  #chuyu-proto .json .n{color:#b45309}
+  #chuyu-proto .json .p{color:var(--muted)}
+  #chuyu-proto .hdrs{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr);gap:4px 16px;padding:8px 2px;font:12px/1.6 ui-monospace,Consolas,monospace}
+  #chuyu-proto .hdrs dt{color:var(--muted)}
+  /* 窄容器降级 */
+  @container (max-width:760px){
+    #chuyu-proto .cy-nav{width:52px}
+    #chuyu-proto .cy-brand b,#chuyu-proto .cy-brand span,#chuyu-proto .nv span,#chuyu-proto .nv em,#chuyu-proto .cy-sec{display:none}
+    #chuyu-proto .cy-brand{justify-content:center;padding:12px 0}
+    #chuyu-proto .nv{justify-content:center}
+    #chuyu-proto .mside{display:none}
+    #chuyu-proto .home{padding:16px}
+    #chuyu-proto .feat{flex-direction:column;align-items:flex-start}
+  }
+  @container (max-width:560px){
+    #chuyu-proto .kv{grid-template-columns:20px minmax(0,1fr) minmax(0,1.2fr) 22px}
+    #chuyu-proto .kv .note,#chuyu-proto .kv-h:nth-child(4){display:none}
+    #chuyu-proto .cy-statusbar .right,#chuyu-proto .cy-winbtns,#chuyu-proto .save{display:none}
+  }
+</style>
+
+<p class="cy-cap">屏幕 ① 首页 —— 打开 App 第一眼：介绍这个工具是干嘛的、怎么用；<small>所有功能都从左侧导航选择</small></p>
+<div class="cy-stage">
+<div class="cy-app" role="application" aria-label="ChuYu 万能工具箱 首页">
+
+  <div class="cy-titlebar"><b>ChuYu 万能工具箱</b> · 首页<div class="cy-winbtns" aria-hidden="true"><span>─</span><span>▢</span><span>✕</span></div></div>
+
+  <div class="cy-shell">
+    <aside class="cy-nav" aria-label="主导航">
+      <div class="cy-brand">
+        <span class="cy-logo" aria-hidden="true">CY</span>
+        <div><b>ChuYu 万能工具箱</b><span>轻量 · 模块化 · 本地运行</span></div>
+      </div>
+      <nav class="cy-navlist">
+        <button class="nv on" type="button"><i data-lucide="home" aria-hidden="true"></i><span>首页</span></button>
+        <div class="cy-sec">网络测试</div>
+        <button class="nv" type="button"><i data-lucide="globe" aria-hidden="true"></i><span>HTTP 测试</span></button>
+        <button class="nv off" type="button" disabled><i data-lucide="radio-tower" aria-hidden="true"></i><span>WebSocket 测试</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="network" aria-hidden="true"></i><span>端口连通检测</span><em>二期</em></button>
+        <div class="cy-sec">编码转换</div>
+        <button class="nv off" type="button" disabled><i data-lucide="braces" aria-hidden="true"></i><span>JSON 格式化</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="binary" aria-hidden="true"></i><span>Base64 编解码</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="clock" aria-hidden="true"></i><span>时间戳转换</span><em>二期</em></button>
+        <div class="cy-sec">开发辅助</div>
+        <button class="nv off" type="button" disabled><i data-lucide="regex" aria-hidden="true"></i><span>正则测试</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="fingerprint" aria-hidden="true"></i><span>哈希计算</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="key-round" aria-hidden="true"></i><span>UUID 生成</span><em>二期</em></button>
+      </nav>
+      <div class="cy-navfoot">
+        <button class="nv" type="button"><i data-lucide="layout-grid" aria-hidden="true"></i><span>模块管理</span></button>
+        <button class="nv" type="button"><i data-lucide="settings" aria-hidden="true"></i><span>设置</span></button>
+      </div>
+    </aside>
+
+    <main class="cy-content">
+      <div class="home">
+        <header class="hero">
+          <h1>ChuYu 万能工具箱</h1>
+          <p>这是一个把常用开发小工具装在一起的本地 App：本期内置「HTTP 请求测试」——像 Postman 一样发请求、看响应，但更轻量；后续会持续加入新工具，装一个 App 顶一抽屉工具。</p>
+          <div class="hero-pills">
+            <span>本地运行 · 无联网</span><span>模块化 · 持续扩展</span><span>中文界面</span><span>安装即用</span>
+          </div>
+        </header>
+
+        <div class="steps">
+          <div><b>1</b><div><strong>左侧导航选工具</strong><span>想用哪个工具，点左侧对应入口</span></div></div>
+          <div><b>2</b><div><strong>在工具页里操作</strong><span>每个工具有独立工作区（如 HTTP 测试）</span></div></div>
+          <div><b>3</b><div><strong>保存与复用</strong><span>请求可存集合、看历史，随时重放</span></div></div>
+        </div>
+
+        <div class="feat">
+          <span class="feat-ico"><i data-lucide="globe" aria-hidden="true"></i></span>
+          <div class="feat-main">
+            <b>HTTP 请求测试<em class="feat-chip">本期交付</em></b>
+            <span>对任意程序 / 服务发起 HTTP 请求并查看响应：轻量版 Postman，开箱即用。</span>
+            <div class="feat-stats"><i>7 种请求方法</i><i>Params / Headers / Body</i><i>JSON 语法高亮</i><i>集合与历史</i></div>
+          </div>
+          <button class="feat-go" type="button">进入模块<i data-lucide="arrow-right" aria-hidden="true"></i></button>
+        </div>
+
+        <div class="cat">
+          <div class="cat-h">网络测试</div>
+          <div class="grid">
+            <button class="card" type="button"><span class="cico"><i data-lucide="globe" aria-hidden="true"></i></span><b>HTTP 测试</b><span>发起 HTTP 请求，查看响应</span></button>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="radio-tower" aria-hidden="true"></i></span><b>WebSocket 测试<em class="eta">二期</em></b><span>长连接收发与调试</span></div>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="network" aria-hidden="true"></i></span><b>端口连通检测<em class="eta">二期</em></b><span>主机端口扫描与探测</span></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-h">编码转换</div>
+          <div class="grid">
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="braces" aria-hidden="true"></i></span><b>JSON 格式化<em class="eta">二期</em></b><span>格式化、校验与对比</span></div>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="binary" aria-hidden="true"></i></span><b>Base64 编解码<em class="eta">二期</em></b><span>文本与 Base64 互转</span></div>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="clock" aria-hidden="true"></i></span><b>时间戳转换<em class="eta">二期</em></b><span>Unix 时间戳与日期互转</span></div>
+          </div>
+        </div>
+
+        <div class="cat">
+          <div class="cat-h">开发辅助</div>
+          <div class="grid">
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="regex" aria-hidden="true"></i></span><b>正则测试<em class="eta">二期</em></b><span>正则表达式验证与提取</span></div>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="fingerprint" aria-hidden="true"></i></span><b>哈希计算<em class="eta">二期</em></b><span>MD5 / SHA 系列摘要</span></div>
+            <div class="card off" aria-disabled="true"><span class="cico"><i data-lucide="key-round" aria-hidden="true"></i></span><b>UUID 生成<em class="eta">二期</em></b><span>批量生成唯一标识</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cy-statusbar">
+        <span class="cy-dot" aria-hidden="true"></span>已启用 1 / 9 个模块 · 二期模块开发中
+        <span class="right">本地运行 · 无联网 · v0.1.0</span>
+      </div>
+    </main>
+  </div>
+</div>
+</div>
+
+<p class="cy-cap gap">屏幕 ② HTTP 测试 —— 在左侧导航点「HTTP 测试」进入测试界面（<small>本期核心功能，一直都在</small>）</p>
+<div class="cy-stage">
+<div class="cy-app" role="application" aria-label="ChuYu 万能工具箱 HTTP 测试模块">
+
+  <div class="cy-titlebar"><b>ChuYu 万能工具箱</b> · HTTP 测试<div class="cy-winbtns" aria-hidden="true"><span>─</span><span>▢</span><span>✕</span></div></div>
+
+  <div class="cy-shell">
+    <aside class="cy-nav" aria-label="主导航">
+      <div class="cy-brand">
+        <span class="cy-logo" aria-hidden="true">CY</span>
+        <div><b>ChuYu 万能工具箱</b><span>轻量 · 模块化 · 本地运行</span></div>
+      </div>
+      <nav class="cy-navlist">
+        <button class="nv" type="button"><i data-lucide="home" aria-hidden="true"></i><span>首页</span></button>
+        <div class="cy-sec">网络测试</div>
+        <button class="nv on" type="button"><i data-lucide="globe" aria-hidden="true"></i><span>HTTP 测试</span></button>
+        <button class="nv off" type="button" disabled><i data-lucide="radio-tower" aria-hidden="true"></i><span>WebSocket 测试</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="network" aria-hidden="true"></i><span>端口连通检测</span><em>二期</em></button>
+        <div class="cy-sec">编码转换</div>
+        <button class="nv off" type="button" disabled><i data-lucide="braces" aria-hidden="true"></i><span>JSON 格式化</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="binary" aria-hidden="true"></i><span>Base64 编解码</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="clock" aria-hidden="true"></i><span>时间戳转换</span><em>二期</em></button>
+        <div class="cy-sec">开发辅助</div>
+        <button class="nv off" type="button" disabled><i data-lucide="regex" aria-hidden="true"></i><span>正则测试</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="fingerprint" aria-hidden="true"></i><span>哈希计算</span><em>二期</em></button>
+        <button class="nv off" type="button" disabled><i data-lucide="key-round" aria-hidden="true"></i><span>UUID 生成</span><em>二期</em></button>
+      </nav>
+      <div class="cy-navfoot">
+        <button class="nv" type="button"><i data-lucide="layout-grid" aria-hidden="true"></i><span>模块管理</span></button>
+        <button class="nv" type="button"><i data-lucide="settings" aria-hidden="true"></i><span>设置</span></button>
+      </div>
+    </aside>
+
+    <main class="cy-content">
+      <div class="modhead">
+        <span class="name">HTTP 测试<em class="chip">模块 v1.0</em></span>
+        <span class="desc">对任意服务发起 HTTP 请求并查看响应</span>
+        <div class="acts">
+          <button class="iconbtn" type="button" aria-label="模块说明"><i data-lucide="info" aria-hidden="true"></i></button>
+          <button class="iconbtn" type="button" aria-label="模块设置"><i data-lucide="settings" aria-hidden="true"></i></button>
+        </div>
+      </div>
+
+      <div class="modwork">
+        <aside class="mside" aria-label="模块侧栏（集合与历史）">
+          <div class="tabbar mini mside-tabs" role="tablist" aria-label="模块侧栏视图">
+            <button class="tab on" type="button" role="tab" aria-selected="true" data-panel="h-coll">集合</button>
+            <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-hist">历史</button>
+          </div>
+          <div class="sec" id="h-coll" role="tabpanel">
+            <div class="sec-h"><span>集合</span><i data-lucide="plus" aria-hidden="true"></i></div>
+            <div class="coll-row"><i data-lucide="chevron-down" aria-hidden="true"></i><i data-lucide="folder" aria-hidden="true"></i><span>演示集合</span><em class="count">3</em></div>
+            <button class="req-row on" type="button"><em class="m get">GET</em><span>用户列表</span></button>
+            <button class="req-row" type="button"><em class="m post">POST</em><span>用户登录</span></button>
+            <button class="req-row" type="button"><em class="m put">PUT</em><span>更新用户信息</span></button>
+          </div>
+          <div class="sec grow" id="h-hist" role="tabpanel" hidden>
+            <div class="sec-h"><span>历史</span><i data-lucide="eraser" aria-hidden="true"></i></div>
+            <button class="his" type="button"><em class="m get">GET</em><span>api.example.com/users</span><time>14:32</time></button>
+            <button class="his" type="button"><em class="m post">POST</em><span>api.example.com/auth/login</span><time>14:20</time></button>
+            <button class="his" type="button"><em class="m get">GET</em><span>httpbin.org/get</span><time>13:55</time></button>
+          </div>
+        </aside>
+
+        <div class="mmain">
+          <div class="reqbar">
+            <label class="method"><select aria-label="请求方法">
+              <option selected>GET</option><option>POST</option><option>PUT</option>
+              <option>PATCH</option><option>DELETE</option><option>HEAD</option><option>OPTIONS</option>
+            </select></label>
+            <input class="url" type="text" value="https://api.example.com/users?page=1&amp;size=10" aria-label="请求 URL">
+            <button class="send" type="button"><i data-lucide="send" aria-hidden="true"></i>发送</button>
+            <button class="save" type="button"><i data-lucide="save" aria-hidden="true"></i>保存</button>
+          </div>
+
+          <div class="tabwrap">
+            <div class="tabbar" role="tablist" aria-label="请求配置">
+              <button class="tab on" type="button" role="tab" aria-selected="true" data-panel="h-params">Params <em>2</em></button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-headers">Headers <em>2</em></button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-body">Body</button>
+              <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-auth">Auth</button>
+            </div>
+            <div class="pane" id="h-params" role="tabpanel">
+              <div class="kv">
+                <div class="kv-h"></div><div class="kv-h">KEY</div><div class="kv-h">VALUE</div><div class="kv-h">描述</div><div class="kv-h"></div>
+                <input type="checkbox" checked aria-label="启用 page"><input type="text" value="page" aria-label="键 page"><input type="text" value="1" aria-label="值 1"><input type="text" class="note" value="页码" aria-label="备注"><span></span>
+                <input type="checkbox" checked aria-label="启用 size"><input type="text" value="size" aria-label="键 size"><input type="text" value="10" aria-label="值 10"><input type="text" class="note" value="每页数量" aria-label="备注"><span></span>
+                <input type="checkbox" aria-label="启用"><input type="text" placeholder="新增参数" aria-label="新键"><input type="text" aria-label="新值"><input type="text" class="note" aria-label="备注"><span></span>
+              </div>
+            </div>
+            <div class="pane" id="h-headers" role="tabpanel" hidden>
+              <div class="kv">
+                <div class="kv-h"></div><div class="kv-h">KEY</div><div class="kv-h">VALUE</div><div class="kv-h">描述</div><div class="kv-h"></div>
+                <input type="checkbox" checked aria-label="启用 Accept"><input type="text" value="Accept" aria-label="键"><input type="text" value="application/json" aria-label="值"><input type="text" class="note" aria-label="备注"><span></span>
+                <input type="checkbox" checked aria-label="启用 Accept-Encoding"><input type="text" value="Accept-Encoding" aria-label="键"><input type="text" value="gzip, deflate" aria-label="值"><input type="text" class="note" aria-label="备注"><span></span>
+                <input type="checkbox" aria-label="启用"><input type="text" placeholder="新增请求头" aria-label="新键"><input type="text" aria-label="新值"><input type="text" class="note" aria-label="备注"><span></span>
+              </div>
+            </div>
+            <div class="pane" id="h-body" role="tabpanel" hidden>
+              <div class="radios" role="radiogroup" aria-label="Body 类型">
+                <label class="rd"><input type="radio" name="h-bt" checked><span>none</span></label>
+                <label class="rd"><input type="radio" name="h-bt"><span>form-data</span></label>
+                <label class="rd"><input type="radio" name="h-bt"><span>x-www-form-urlencoded</span></label>
+                <label class="rd"><input type="radio" name="h-bt"><span>raw · JSON</span></label>
+              </div>
+              <p class="hint">当前 GET 请求不携带 Body；方法切换为 POST / PUT / PATCH 后可在此编辑。</p>
+            </div>
+            <div class="pane" id="h-auth" role="tabpanel" hidden>
+              <div class="radios" role="radiogroup" aria-label="鉴权方式">
+                <label class="rd"><input type="radio" name="h-auth" checked><span>不使用</span></label>
+                <label class="rd"><input type="radio" name="h-auth"><span>Bearer Token</span></label>
+                <label class="rd"><input type="radio" name="h-auth"><span>Basic Auth</span></label>
+              </div>
+              <p class="hint">选择 Bearer Token 后，Authorization 请求头将自动注入。</p>
+            </div>
+          </div>
+
+          <div class="split" aria-hidden="true"><span></span></div>
+
+          <div class="res" aria-label="响应">
+            <div class="resbar">
+              <span class="status">200 OK</span>
+              <span class="meta-i">142 ms</span>
+              <span class="meta-i">2.4 KB</span>
+              <div class="tabbar mini" role="tablist" aria-label="响应视图">
+                <button class="tab on" type="button" role="tab" aria-selected="true" data-panel="h-res-body">Body</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-res-headers">Headers</button>
+                <span class="tab dis" aria-disabled="true">Cookies · 二期</span>
+              </div>
+            </div>
+            <div id="h-res-body" role="tabpanel">
+              <div class="viewbar" role="tablist" aria-label="Body 格式">
+                <button class="tab on" type="button" role="tab" aria-selected="true" data-panel="h-pretty">Pretty</button>
+                <button class="tab" type="button" role="tab" aria-selected="false" data-panel="h-raw">Raw</button>
+                <span class="tab dis" aria-disabled="true">预览 · 二期</span>
+              </div>
+              <div class="scoll">
+                <pre class="json" id="h-pretty">{
+  <span class="k">"code"</span><span class="p">:</span> <span class="n">0</span><span class="p">,</span>
+  <span class="k">"message"</span><span class="p">:</span> <span class="s">"ok"</span><span class="p">,</span>
+  <span class="k">"data"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="k">"total"</span><span class="p">:</span> <span class="n">128</span><span class="p">,</span>
+    <span class="k">"list"</span><span class="p">:</span> <span class="p">[</span>
+      <span class="p">{</span> <span class="k">"id"</span><span class="p">:</span> <span class="n">1</span><span class="p">,</span> <span class="k">name</span><span class="p">:</span> <span class="s">"张三"</span><span class="p">,</span> <span class="k">"role"</span><span class="p">:</span> <span class="s">"admin"</span> <span class="p">},</span>
+      <span class="p">{</span> <span class="k">"id"</span><span class="p">:</span> <span class="n">2</span><span class="p">,</span> <span class="k">"name"</span><span class="p">:</span> <span class="s">"李四"</span><span class="p">,</span> <span class="k">"role"</span><span class="p">:</span> <span class="s">"user"</span> <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">}</span>
+<span class="p">}</span></pre>
+                <pre class="json" id="h-raw" hidden>{"code":0,"message":"ok","data":{"total":128,"list":[{"id":1,"name":"张三","role":"admin"},{"id":2,"name":"李四","role":"user"}]}}</pre>
+              </div>
+            </div>
+            <div class="scoll" id="h-res-headers" role="tabpanel" hidden>
+              <dl class="hdrs">
+                <dt>content-type</dt><dd>application/json; charset=utf-8</dd>
+                <dt>x-request-id</dt><dd>8f3a91c2-4b7e</dd>
+                <dt>server</dt><dd>nginx/1.25.3</dd>
+                <dt>date</dt><dd>Sat, 24 Oct 2026 07:32:11 GMT</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cy-statusbar">
+        <span class="cy-dot" aria-hidden="true"></span>就绪
+        <span class="right">模块：HTTP 测试 · 超时 30 s · UTF-8 · v0.1.0</span>
+      </div>
+    </main>
+  </div>
+</div>
+</div>
+
+<script>
+(function () {
+  var root = document.getElementById('chuyu-proto');
+  if (!root) return;
+  root.querySelectorAll('button.tab[data-panel]').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      var bar = tab.closest('.tabbar');
+      if (!bar) return;
+      bar.querySelectorAll(':scope > .tab').forEach(function (t) {
+        var on = t === tab;
+        t.classList.toggle('on', on);
+        t.setAttribute('aria-selected', String(on));
+      });
+      bar.querySelectorAll(':scope > .tab[data-panel]').forEach(function (t) {
+        var p = document.getElementById(t.getAttribute('data-panel'));
+        if (p) p.hidden = t !== tab;
+      });
+    });
+  });
+  if (window.lucide) { lucide.createIcons({ attrs: { width: 14, height: 14 } }); }
+})();
+</script>
+</div>
+</body>
+</html>
