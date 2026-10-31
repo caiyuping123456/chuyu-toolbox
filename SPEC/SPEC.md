@@ -1,9 +1,9 @@
 # ChuYu 万能工具箱 规格说明书 v0.6
 
-> 状态：**M3 持久化 + M5-1 WebSocket + M5-2 端口检测 + M5-3 JSON 格式化完成（analyze 0、测试 45/45）；M4 打包待 VS 工具链**
+> 状态：**M3 + 全部 9 个模块完成（analyze 0、测试 54/54）；M4 打包待 VS 工具链；M5 二期批量交付**
 > 目录：`E:\javaclass\posttest` ｜ 工程目录：`E:\javaclass\posttest\chuyu_toolapp`
 > 日期：2026-10-31
-> 变更记录：v0.3 名称/布局/白色主题 → v0.4 定稿 Dart+Flutter → v0.5 单窗口+快速入口+Ctrl K 搜索+UI 量化 → **v0.6 文档体系定稿；环境实测更新（Flutter 已装）；模块接口增加深链接 `intent`；M1 进度改由 plan 文档跟踪** → M3 持久化完成（需求未变） → **M5-1 WebSocket 测试交付** → **M5-2 端口连通检测交付** → **M5-3 JSON 格式化交付**
+> 变更记录：v0.3 名称/布局/白色主题 → v0.4 定稿 Dart+Flutter → v0.5 单窗口+快速入口+Ctrl K 搜索+UI 量化 → **v0.6 文档体系定稿；环境实测更新（Flutter 已装）；模块接口增加深链接 `intent`；M1 进度改由 plan 文档跟踪** → M3 持久化完成（需求未变） → **M5-1 WebSocket 测试交付** → **M5-2 端口连通检测交付** → **M5-3 JSON 格式化交付** → **M5-4..8 Base64/时间戳/正则/哈希/UUID 交付 + 最近使用增强**
 > 说明：本文档是唯一需求基准，开发严格按此推进；范围变动先改文档（新时间戳版本）再改代码。
 
 ---
@@ -33,7 +33,7 @@ E:\javaclass\posttest\
 **ChuYu 万能工具箱**：用 **Dart + Flutter** 编写、可打包**安装到 Windows 电脑**的万能工具箱桌面应用。
 
 - 本体（壳）负责：**单窗口与页面切换**、左侧导航、首页（介绍 + 快速入口）、**全局搜索**、模块注册与加载、全局设置、本地存储；
-- 一切具体能力都是**模块**：已交付 **「HTTP 请求测试」**（轻量版 Postman）、**「WebSocket 测试」**、**「端口连通检测」**与 **「JSON 格式化」**；
+- 一切具体能力都是**模块**：已交付 **「HTTP 请求测试」**（轻量版 Postman）、**「WebSocket 测试」**、**「端口连通检测」**、**「JSON 格式化」**、**「Base64 编解码」**、**「时间戳转换」**、**「正则测试」**、**「哈希计算」**与 **「UUID 生成」**；
 - 同一份模块注册表同时驱动：侧栏导航、首页「全部工具」、全局搜索结果；快速入口为 4 个固定操作（深链接到 HTTP 模块状态）；**新增模块不改核心**；
 - 后续继续扩展（Base64、时间戳、正则、哈希、UUID……）；
 - 界面风格：**白色简约**（白色面板 + 浅灰背景 + 细边框 + 单一强调色），中文。
@@ -177,9 +177,9 @@ abstract class ToolboxModule {
 
 ### 5.3 二期模块候选与已交付
 
-**已交付**：WebSocket 测试（M5-1，`modules/websocket_test/`，`dart:io` 直连、文本收发、日志与状态）；端口连通检测（M5-2，`modules/port_scan/`，TCP connect、并发/停止/统计）；JSON 格式化（M5-3，`modules/json_format/`，格式化/压缩/校验/排序/复制）。
+**全部交付（9/9）**：WebSocket（M5-1）；端口连通检测（M5-2）；JSON 格式化（M5-3）；Base64 编解码（M5-4）；时间戳转换（M5-5）；正则测试（M5-6）；哈希计算（M5-7，新增 `crypto` 官方依赖）；UUID 生成（M5-8）。另加**最近使用**增强（`AppState.recentModules`，首页渲染最近 4 个模块）。
 
-**待做**：Base64 编解码、时间戳转换、正则测试、哈希计算、UUID 生成、接口批量断言、模块市场 / 本地插件加载、深色主题、拼音 / 模糊搜索、CLI 模式。
+**待做**：接口批量断言、模块市场 / 本地插件加载、深色主题、拼音 / 模糊搜索、CLI 模式。
 
 ---
 
@@ -241,7 +241,7 @@ abstract class ToolboxModule {
 
 ### 7.5 原型文件
 
-可交互原型 `ChuYu万能工具箱-界面原型.html`（侧栏切换、快速入口、Ctrl K 搜索、HTTP 页签、Ctrl Enter、复制提示、窄窗图标栏）；预览图 `界面原型-预览.png` / `-HTTP.png` / `-搜索.png`；旧版备份 `-v1备份.html`。原型以壳 + HTTP 页为基准；WebSocket（M5-1）、端口检测（M5-2）与 JSON 格式化（M5-3）页均按同一套 token 实现，未另做原型页。
+可交互原型 `ChuYu万能工具箱-界面原型.html`（侧栏切换、快速入口、Ctrl K 搜索、HTTP 页签、Ctrl Enter、复制提示、窄窗图标栏）；预览图 `界面原型-预览.png` / `-HTTP.png` / `-搜索.png`；旧版备份 `-v1备份.html`。原型以壳 + HTTP 页为基准；二期模块（M5-1..8）均按同一套 token 实现，未另做原型页。
 
 ### 7.6 Flutter 主题与组件映射（实现约定，M1 已落地）
 
@@ -266,9 +266,9 @@ abstract class ToolboxModule {
 | M2 | HTTP 收发贯通 | 7 方法全通；Params/Headers/Body 全类型；Ctrl Enter；响应状态/耗时/大小/Pretty/复制 | ⏳ |
 | M3 | 持久化 | 集合增删改+载入重放；历史自动记录+回填；本地过滤；重启数据完好 | ✅ 代码与自动化验证完成（analyze 0、测试 17/17）；实机待 VS 工具链 |
 | M4 | 打包安装 | flutter build windows + Inno Setup/msix；安装→使用→卸载实测 | ⏳（需 VS 工具链） |
-| M5 | 二期启动 | 按用户优先级排 | 🚧 M5-1 WebSocket、M5-2 端口检测、M5-3 JSON 格式化已交付（analyze 0、测试 45/45）；其余待排 |
+| M5 | 二期启动 | 按用户优先级排 | ✅ M5-1..8 全部交付 + 最近使用（analyze 0、测试 54/54） |
 
-进度跟踪：`plans/ROADMAP-20261024-1950.md`（M5-2 计划：`plans/PLAN-20261030-2147-M5-2.md`；M5-3：`plans/PLAN-20261031-0930-M5-3.md`）。
+进度跟踪：`plans/ROADMAP-20261024-1950.md`（M5-2：`plans/PLAN-20261030-2147-M5-2.md`；M5-3：`plans/PLAN-20261031-0930-M5-3.md`；M5-4..8：`plans/PLAN-20261031-1400-M5-4to8.md`）。
 
 ---
 
@@ -288,7 +288,8 @@ abstract class ToolboxModule {
 
 ## 11. 下一步
 
-M3 持久化、M5-1 WebSocket、M5-2 端口检测与 M5-3 JSON 格式化已完成（`flutter analyze` 0 issue、`flutter test` 45/45）。下一步可选：**M4 打包安装**（依赖 VS C++ 工具链，用户暂缓）或继续 M5 的下一模块（Base64 / 时间戳 / 正则 …）。
+**全部 9 个模块 + 最近使用增强已完成**（`flutter analyze` 0 issue、`flutter test` 54/54，2026-10-31）。下一步 **M4 打包安装**：安装 VS Build Tools（C++ 桌面开发）→ `flutter build windows --release` → Inno Setup/msix → 安装/卸载实测。
+
 
 
 

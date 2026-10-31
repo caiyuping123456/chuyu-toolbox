@@ -77,42 +77,11 @@ const plannedModules = <PlannedModule>[
 
 
 
-  PlannedModule(
-      id: 'base64',
-      name: 'Base64 编解码',
-      category: '编码转换',
-      summary: '文本与 Base64 互转',
-      icon: Icons.terminal,
-      keywords: ['base64', '编码', '解码']),
-  PlannedModule(
-      id: 'timestamp',
-      name: '时间戳转换',
-      category: '编码转换',
-      summary: 'Unix 时间戳与日期互转',
-      icon: Icons.schedule,
-      keywords: ['时间戳', 'unix', 'date', '日期']),
-  PlannedModule(
-      id: 'regex_test',
-      name: '正则测试',
-      category: '开发辅助',
-      summary: '正则表达式验证与提取',
-      icon: Icons.rule,
-      keywords: ['正则', 'regex', '表达式']),
-  PlannedModule(
-      id: 'hash',
-      name: '哈希计算',
-      category: '开发辅助',
-      summary: 'MD5 / SHA 系列摘要',
-      icon: Icons.fingerprint,
-      keywords: ['md5', 'sha', '哈希', '摘要']),
-  PlannedModule(
-      id: 'uuid',
-      name: 'UUID 生成',
-      category: '开发辅助',
-      summary: '批量生成唯一标识',
-      icon: Icons.vpn_key_outlined,
-      keywords: ['uuid', 'guid', '唯一']),
+
+
 ];
+
+
 
 
 

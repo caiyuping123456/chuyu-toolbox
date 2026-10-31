@@ -86,6 +86,33 @@ class HomePage extends StatelessWidget {
 
           const SizedBox(height: AppSpacing.sectionGap),
 
+          // ── 最近使用（M5 增强：高频访问）──
+          if (state.recentModules.isNotEmpty) ...[
+            SectionLabel('最近使用'),
+            Row(
+              children: [
+                for (final id in state.recentModules)
+                  if (registry.byId(id) != null)
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: id == state.recentModules.first ? 0 : 10),
+                        child: _QuickCard(
+                          action: QuickAction(
+                            icon: registry.byId(id)!.icon,
+                            title: registry.byId(id)!.name,
+                            subtitle: registry.byId(id)!.summary,
+                            run: (s) => s.openModule(id),
+                          ),
+                          onTap: () => state.openModule(id),
+                        ),
+                      ),
+                    ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.sectionGap),
+          ],
+
           // ── 快速入口（4 个固定深链接，SPEC §4.2）──
           Row(
             children: [
@@ -224,6 +251,7 @@ class _ToolRow extends StatelessWidget {
     );
   }
 }
+
 
 
 

@@ -6,6 +6,7 @@ enum ShellPage { home, module, manager, settings }
 /// 全局 UI 状态：当前页面、模块深链接意图、全局搜索面板开关。
 class AppState extends ChangeNotifier {
   ShellPage _page = ShellPage.home;
+  final List<String> _recent = <String>[];
   String? _activeModuleId;
   Object? _moduleIntent;
   bool _searchOpen = false;
@@ -37,9 +38,15 @@ class AppState extends ChangeNotifier {
   }
 
   /// 进入模块页；intent 为模块深链接状态（如 HTTP 的聚焦 URL / 指定页签）。
+  List<String> get recentModules => List<String>.unmodifiable(_recent);
+
   void openModule(String id, {Object? intent}) {
     _page = ShellPage.module;
     _activeModuleId = id;
+    _recent
+      ..remove(id)
+      ..insert(0, id);
+    if (_recent.length > 4) _recent.removeLast();
     _moduleIntent = intent;
     _searchOpen = false;
     notifyListeners();
@@ -59,3 +66,4 @@ class AppState extends ChangeNotifier {
     }
   }
 }
+

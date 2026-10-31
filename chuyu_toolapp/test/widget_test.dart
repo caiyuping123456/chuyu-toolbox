@@ -45,19 +45,14 @@ void main() {
     expect(find.text('新建请求'), findsOneWidget); // 快速入口卡片
     expect(find.text('时间戳转换'), findsWidgets); // 侧栏 + 全部工具
     expect(find.text('9 个工具规划'), findsOneWidget);
-    expect(find.text('4 个已启用'), findsOneWidget);
+    expect(find.text('9 个已启用'), findsOneWidget);
   });
 
-  testWidgets('侧栏：进入 HTTP 模块页；二期项点击提示', (tester) async {
+  testWidgets('侧栏：进入 HTTP 模块页', (tester) async {
     await pumpApp(tester);
     await tester.tap(find.text('HTTP 测试').first);
     await tester.pumpAndSettle();
     expect(find.text('模块 v1.0 · M3'), findsOneWidget);
-    expect(find.textContaining('模块：HTTP 测试'), findsOneWidget); // 状态栏
-
-    await tester.tap(find.text('Base64 编解码').first);
-    await tester.pump();
-    expect(find.textContaining('二期提供'), findsOneWidget); // SnackBar
     await tester.pumpAndSettle();
   });
 
@@ -100,20 +95,20 @@ void main() {
     expect(find.text('快捷入口'), findsOneWidget); // 分组头
 
     // 输入即时过滤
-    await tester.enterText(find.byKey(const ValueKey('palette_input')), 'json');
+    await tester.enterText(find.byKey(const ValueKey('palette_input')), 'websock');
     await tester.pumpAndSettle();
     final list = find.byKey(const ValueKey('palette_list'));
     expect(
-        find.descendant(of: list, matching: find.text('JSON 格式化')),
+        find.descendant(of: list, matching: find.text('WebSocket 测试')),
         findsOneWidget);
     expect(
         find.descendant(of: list, matching: find.text('HTTP 测试')),
         findsNothing);
 
-    // Enter 执行选中项（JSON 格式化已启用 → 直接进入模块）
+    // Enter 执行选中项（WebSocket → 进入模块）
     await tester.sendKeyEvent(LogicalKeyboardKey.enter);
     await tester.pumpAndSettle();
-    expect(find.text('模块 v1.0 · M5-3'), findsOneWidget);
+    expect(find.text('模块 v1.0 · M5'), findsOneWidget);
     await tester.pumpAndSettle();
     expect(find.text('快捷入口'), findsNothing); // 面板已关闭
 
@@ -126,6 +121,11 @@ void main() {
     expect(find.text('快捷入口'), findsNothing);
   });
 }
+
+
+
+
+
 
 
 
