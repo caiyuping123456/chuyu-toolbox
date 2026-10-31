@@ -92,7 +92,53 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
         ),
+        const SizedBox(height: 14),
+        AppCard(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('快捷键',
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.text)),
+              const SizedBox(height: 8),
+              _kbd('Ctrl K', '全局搜索（任意页面）'),
+              _kbd('/', '全局搜索（焦点不在输入框时）'),
+              _kbd('Ctrl Enter', '发送请求（HTTP / WebSocket）'),
+              _kbd('Ctrl S', '保存请求到集合（HTTP）'),
+              _kbd('↑ ↓ Enter', '搜索结果选择与打开'),
+              _kbd('Esc', '关闭搜索面板'),
+            ],
+          ),
+        ),
       ],
+    );
+  }
+
+  Widget _kbd(String keys, String desc) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: AppColors.fill,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: AppColors.borderSoft),
+            ),
+            child: Text(keys,
+                style: const TextStyle(
+                    fontSize: 9.5,
+                    fontFamily: 'Cascadia Code',
+                    color: AppColors.text2)),
+          ),
+          const SizedBox(width: 10),
+          Text(desc, style: AppTypography.aux.copyWith(fontSize: 10.5)),
+        ],
+      ),
     );
   }
 
@@ -110,3 +156,4 @@ class SettingsPage extends StatelessWidget {
     );
   }
 }
+

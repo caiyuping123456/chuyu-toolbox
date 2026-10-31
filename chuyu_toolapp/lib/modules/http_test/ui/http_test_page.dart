@@ -55,6 +55,7 @@ class _HttpTestPageState extends State<HttpTestPage> {
 
   HttpResult? _result;
   bool _sending = false;
+  double _reqFlex = 5; // 请求卡 / 响应区高度比例（M5 增强：拖拽分栏）
   bool _syncingUrl = false;
 
   // 存储（M3）
@@ -356,7 +357,10 @@ class _HttpTestPageState extends State<HttpTestPage> {
                     padding: const EdgeInsets.all(9),
                     child: Column(
                       children: [
-                        _requestCard(),
+                        Flexible(
+                          flex: _reqFlex.round(),
+                          child: _requestCard(),
+                        ),
                         _dragBar(),
                         Expanded(
                           child: ResponseView(
@@ -960,23 +964,35 @@ class _HttpTestPageState extends State<HttpTestPage> {
   }
 
   Widget _dragBar() {
-    return Container(
-      height: 7,
-      margin: const EdgeInsets.symmetric(vertical: 9),
-      decoration: const BoxDecoration(
-        color: AppColors.fill,
-        border: Border(
-          top: BorderSide(color: AppColors.borderSoft),
-          bottom: BorderSide(color: AppColors.borderSoft),
-        ),
-      ),
-      child: Center(
+    return MouseRegion(
+      cursor: SystemMouseCursors.resizeRow,
+      child: GestureDetector(
+        key: const ValueKey('http_split_drag'),
+        behavior: HitTestBehavior.opaque,
+        onVerticalDragUpdate: (d) {
+          setState(() {
+            _reqFlex = (_reqFlex - d.delta.dy / 40).clamp(3.0, 9.0);
+          });
+        },
         child: Container(
-          width: 34,
-          height: 3,
-          decoration: BoxDecoration(
-              color: AppColors.border,
-              borderRadius: BorderRadius.circular(2)),
+          height: 7,
+          margin: const EdgeInsets.symmetric(vertical: 9),
+          decoration: const BoxDecoration(
+            color: AppColors.fill,
+            border: Border(
+              top: BorderSide(color: AppColors.borderSoft),
+              bottom: BorderSide(color: AppColors.borderSoft),
+            ),
+          ),
+          child: Center(
+            child: Container(
+              width: 34,
+              height: 3,
+              decoration: BoxDecoration(
+                  color: AppColors.border,
+                  borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
         ),
       ),
     );
@@ -1299,6 +1315,8 @@ class MethodBadge extends StatelessWidget {
     );
   }
 }
+
+
 
 
 
