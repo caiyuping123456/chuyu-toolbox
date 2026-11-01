@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'core/module_registry.dart';
 import 'modules/http_test/http_test_module.dart';
 import 'modules/base64_codec/base64_codec_module.dart';
+import 'modules/format_convert/format_convert_module.dart';
 import 'modules/json_format/json_format_module.dart';
 import 'modules/timestamp/timestamp_module.dart';
 import 'modules/hash_calc/hash_calc_module.dart';
@@ -27,6 +28,7 @@ class ToolboxAppBootstrap extends StatelessWidget {
     JsonFormatModule(),
     Base64CodecModule(),
     TimestampModule(),
+    FormatConvertModule(),
     RegexTestModule(),
     HashCalcModule(),
     UuidGenModule(),
@@ -38,6 +40,8 @@ class ToolboxAppBootstrap extends StatelessWidget {
     return ToolboxApp(registry: registry);
   }
 }
+
+
 
 
 

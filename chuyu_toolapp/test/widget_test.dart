@@ -54,8 +54,8 @@ void main() {
     expect(find.text('搜索工具、操作…'), findsOneWidget);
     expect(find.text('新建请求'), findsOneWidget); // 快速入口卡片
     expect(find.text('时间戳转换'), findsWidgets); // 侧栏 + 全部工具
-    expect(find.text('9 个工具规划'), findsOneWidget);
-    expect(find.text('9 个已启用'), findsOneWidget);
+    expect(find.text('10 个工具规划'), findsOneWidget);
+    expect(find.text('10 个已启用'), findsOneWidget);
   });
 
   testWidgets('侧栏：进入 HTTP 模块页', (tester) async {
@@ -131,6 +131,8 @@ void main() {
     expect(find.text('快捷入口'), findsNothing);
   });
 }
+
+
 
 
 
