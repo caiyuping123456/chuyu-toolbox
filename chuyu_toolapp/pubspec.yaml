@@ -16,6 +16,9 @@ dependencies:
   path_provider: ^2.1.4
   crypto: ^3.0.3
   yaml: ^3.1.2
+  markdown: ^7.3.1
+  archive: ^4.6.0
+  pdf: ^3.13.1
 
 dev_dependencies:
   flutter_test:
