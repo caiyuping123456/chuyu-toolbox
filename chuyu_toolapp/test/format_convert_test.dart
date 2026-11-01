@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:chuyu_toolapp/modules/format_convert/format_converter.dart';
 
 void main() {
+  extraTests();
   test('JSON → YAML', () {
     final r = FormatConverter.convert('{"name":"ChuYu","count":9}', Fmt.json, Fmt.yaml);
     expect(r.ok, isTrue);
@@ -57,5 +58,36 @@ void main() {
     final r = FormatConverter.convert('[1,2,3]', Fmt.json, Fmt.csv);
     expect(r.ok, isFalse);
     expect(r.error, contains('对象数组'));
+  });
+}
+
+void extraTests() {
+  test('TSV to JSON', () {
+    final r = FormatConverter.convert('a\tb\n1\tx', Fmt.tsv, Fmt.json);
+    expect(r.ok, isTrue);
+    expect(r.output, contains('"a": "1"'));
+  });
+
+  test('JSON to TSV', () {
+    final r = FormatConverter.convert('[{"a":1,"b":"x"}]', Fmt.json, Fmt.tsv);
+    expect(r.ok, isTrue);
+    final lines = r.output!.split('\n');
+    expect(lines.first, 'a\tb');
+    expect(lines[1], '1\tx');
+  });
+
+  test('JSON to MD Table', () {
+    final r = FormatConverter.convert('[{"name":"A"},{"name":"B"}]', Fmt.json, Fmt.mdTable);
+    expect(r.ok, isTrue);
+    expect(r.output, contains('| name |'));
+    expect(r.output, contains('| A |'));
+  });
+
+  test('MD Table to JSON', () {
+    final md = '| a | b |\n| --- | --- |\n| 1 | x |\n| 2 | y |';
+    final r = FormatConverter.convert(md, Fmt.mdTable, Fmt.json);
+    expect(r.ok, isTrue);
+    expect(r.output, contains('"a": "1"'));
+    expect(r.output, contains('"b": "y"'));
   });
 }

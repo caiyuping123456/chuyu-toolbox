@@ -19,7 +19,7 @@ class _FormatConvertPageState extends State<FormatConvertPage> {
   String? _error;
   String? _notice;
 
-  static const _sample = '{"name":"ChuYu","tags":["dev","tool"],"count":9}';
+  static const _sample = '[{"name":"ChuYu","role":"admin"},{"name":"LiSi","role":"user"}]';
 
   @override
   void dispose() {

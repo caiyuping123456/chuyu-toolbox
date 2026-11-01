@@ -2,14 +2,16 @@ import 'dart:convert';
 
 import 'package:yaml/yaml.dart';
 
-enum Fmt { json, yaml, csv, xml }
+enum Fmt { json, yaml, csv, tsv, xml, mdTable }
 
 extension FmtX on Fmt {
   String get label => switch (this) {
         Fmt.json => 'JSON',
         Fmt.yaml => 'YAML',
         Fmt.csv => 'CSV',
+        Fmt.tsv => 'TSV',
         Fmt.xml => 'XML',
+        Fmt.mdTable => 'MD Table',
       };
 }
 
@@ -40,7 +42,7 @@ abstract final class FormatConverter {
     return y;
   }
 
-  static List<Map<String, String>> _parseCsv(String s) {
+  static List<Map<String, String>> _parseCsv(String s, [String sep = ',']) {
     final rows = <List<String>>[];
     final cell = StringBuffer();
     var inQuote = false;
@@ -60,7 +62,7 @@ abstract final class FormatConverter {
         }
       } else if (ch == '"') {
         inQuote = true;
-      } else if (ch == ',') {
+      } else if (ch == sep) {
         row.add(cell.toString());
         cell.clear();
       } else if (ch == '\n' || ch == '\r') {
@@ -164,6 +166,57 @@ abstract final class FormatConverter {
     return needsQuote ? '"${s.replaceAll('"', '""')}"' : s;
   }
 
+  static List<Map<String, String>> _parseMdTable(String s) {
+    final rows = <List<String>>[];
+    for (final line in s.split('\n')) {
+      final l = line.trim();
+      if (!l.startsWith('|') || l.endsWith('|') == false) continue;
+      final cells = l.split('|').skip(1).toList();
+      if (cells.isNotEmpty && cells.last.trim().isEmpty) cells.removeLast();
+      rows.add(cells.map((c) => c.trim()).toList());
+    }
+    if (rows.length < 2) return <Map<String, String>>[];
+    final header = rows.first;
+    return [
+      for (final r in rows.skip(2)) // 跳过分隔行
+        {for (var i = 0; i < header.length; i++) header[i]: i < r.length ? r[i] : ''}
+    ];
+  }
+
+  static String _toMdTable(Object? v) {
+    if (v is! List || v.isEmpty || v.first is! Map) {
+      throw FormatException('MD 表格仅支持「对象数组」');
+    }
+    final cols = <String>{};
+    for (final row in v) {
+      cols.addAll((row as Map).keys.map((k) => '$k'));
+    }
+    final colList = cols.toList();
+    final buf = StringBuffer();
+    buf.writeln('| ${colList.join(' | ')} |');
+    buf.writeln('| ${colList.map((_) => '---').join(' | ')} |');
+    for (final row in v.cast<Map>()) {
+      buf.writeln('| ${colList.map((c) => '${row[c] ?? ''}').join(' | ')} |');
+    }
+    return buf.toString();
+  }
+
+  static String _toTsv(Object? v) {
+    if (v is! List || v.isEmpty || v.first is! Map) {
+      throw FormatException('TSV only supports array of objects');
+    }
+    final cols = <String>{};
+    for (final row in v) {
+      cols.addAll((row as Map).keys.map((k) => '$k'));
+    }
+    final buf = StringBuffer();
+    buf.writeln(cols.join('\t'));
+    for (final row in v.cast<Map>()) {
+      buf.writeln(cols.map((c) => '${row[c] ?? ''}').join('\t'));
+    }
+    return buf.toString().trimRight();
+  }
+
   static String _csvEscape(String v) =>
       v.contains(',') || v.contains('"') || v.contains('\n')
           ? '"${v.replaceAll('"', '""')}"'
@@ -236,7 +289,9 @@ abstract final class FormatConverter {
       model = switch (from) {
         Fmt.json => _parseJson(trimmed),
         Fmt.yaml => _parseYaml(trimmed),
-        Fmt.csv => _parseCsv(trimmed),
+        Fmt.csv => _parseCsv(trimmed, ','),
+        Fmt.tsv => _parseCsv(trimmed, '\t'),
+        Fmt.mdTable => _parseMdTable(trimmed),
         Fmt.xml => _parseXml(trimmed),
       };
     } catch (e) {
@@ -261,6 +316,8 @@ abstract final class FormatConverter {
         Fmt.json => _toJson(model),
         Fmt.yaml => _toYaml(model),
         Fmt.xml => _toXml(model),
+        Fmt.mdTable => _toMdTable(model),
+        Fmt.tsv => _toTsv(model),
         Fmt.csv => throw StateError('unreachable'),
       };
       return ConvertResult.ok(out);
@@ -269,4 +326,5 @@ abstract final class FormatConverter {
     }
   }
 }
+
 
