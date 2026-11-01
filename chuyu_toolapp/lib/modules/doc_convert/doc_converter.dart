@@ -124,6 +124,22 @@ $body
 </html>''';
   }
 
+
+  static String _wrapHtml(String title, String body) => '''<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>${_esc(title)}</title>
+<style>
+body { font-family: "Segoe UI", "Microsoft YaHei", sans-serif; max-width: 720px; margin: 40px auto; color: #1c1f26; line-height: 1.75; }
+h1, h2 { color: #2f6bff; }
+</style>
+</head>
+<body>
+$body
+</body>
+</html>''';
+
   static String _esc(String s) => s
       .replaceAll('&', '&amp;')
       .replaceAll('<', '&lt;')
@@ -288,7 +304,9 @@ ${paragraphs.join('\n')}
       final text = switch (to) {
         DocFmt.txt => _toTxt(lines),
         DocFmt.md => _toMd(lines),
-        DocFmt.html => _toHtml(title, lines),
+        DocFmt.html => from == DocFmt.md
+            ? _wrapHtml(title, md.markdownToHtml(trimmed))
+            : _toHtml(title, lines),
         DocFmt.rtf => _toRtf(lines),
         _ => throw StateError('unreachable'),
       };
@@ -298,6 +316,7 @@ ${paragraphs.join('\n')}
     }
   }
 }
+
 
 
 
